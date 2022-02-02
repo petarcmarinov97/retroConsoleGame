@@ -1,0 +1,10 @@
+div.controller{
+    margin-top: 30px;
+    width: 410px;
+    height: 205px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    justify-content: space-between;
+}

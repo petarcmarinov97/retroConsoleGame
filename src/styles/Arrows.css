@@ -1,0 +1,20 @@
+div.arrows {
+    margin-right: 5px;
+    width: 122px;
+    height: 122px;
+    position: relative;
+    justify-content: center;
+    align-content: center;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+div.arrows div {
+    display: flex;
+    align-items: center;
+    transform-origin: 60px;
+    position: absolute;
+    transform: rotate(calc(360deg / 4 * var(--i)));
+    left: 0;
+}

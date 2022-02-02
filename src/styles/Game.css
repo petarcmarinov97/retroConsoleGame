@@ -1,0 +1,8 @@
+div.game {
+    margin: 4px 1px 0px 4px;
+    max-height: 400px;
+    max-width: 200px;
+    height: 390px;
+    width: 200px;
+    border: 1px solid black;
+}

@@ -1,0 +1,8 @@
+div.scoreboard {
+    margin: 4px 4px 0px 0px;
+    max-height: 390px;
+    max-width: 152px;
+    height: 390px;
+    width: 152px;
+    border: 1px solid black;
+}
