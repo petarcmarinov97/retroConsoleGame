@@ -52,25 +52,29 @@ export const arrowButtonCfg = [
         style: arrowButtonStyle,
         size: arrowButtonSize,
         shape: buttonShape,
+        key: "ArrowLeft"
     },
     {
         "--i": 1,
         style: arrowButtonStyle,
         size: arrowButtonSize,
         shape: buttonShape,
-        label: true
+        label: true,
+        key: "ArrowUp"
     },
     {
         "--i": 2,
         style: arrowButtonStyle,
         size: arrowButtonSize,
         shape: buttonShape,
+        key: "ArrowRigth"
     },
     {
         "--i": 3,
         style: arrowButtonStyle,
         size: arrowButtonSize,
         shape: buttonShape,
+        key: "ArrowDown"
     }
 ]
 
@@ -79,23 +83,27 @@ export const functionalButtonCfg = [
         style: pauseButtonStyle,
         size: optionalButtonSize,
         shape: buttonShape,
-        text: pauseButtonText
+        text: pauseButtonText,
+        key: "KeyP"
     },
     {
         style: soundButtonStyle,
         size: optionalButtonSize,
         shape: buttonShape,
-        text: soundButtonText
+        text: soundButtonText,
+        key: "KeyS"
     },
     {
         style: resetButtonStyle,
         size: optionalButtonSize,
         shape: buttonShape,
-        text: resetButtonText
+        text: resetButtonText,
+        key: "KeyR"
     },
     {
         style: dropButtonStyle,
         shape: buttonShape,
-        text: dropButtonText
+        text: dropButtonText,
+        key: "Space"
     }
 ]

@@ -9,12 +9,11 @@ export default class GameBoy extends Component {
     render() {
         const { Title } = Typography;
         const { gameTitle } = this.props;
-        const game = <Game />
 
         return <div className="game_boy">
             <>
                 <Title level={4}>{gameTitle}</Title>
-                <Display game={game} />
+                <Display />
                 <Controller />
             </>
         </div>;

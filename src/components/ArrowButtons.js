@@ -4,8 +4,9 @@ import "../styles/Arrows.css";
 import Button from './Button';
 
 export default class Arrows extends Component {
+
     render() {
-        const arrowSpan = <span>&#11164;</span>;
+        const arrowSpan = <span>&#11164;</span>
 
         return <div className="arrows">
             <>
@@ -13,8 +14,11 @@ export default class Arrows extends Component {
                     <div
                         key={btn["--i"]}
                         className="button_wrapper">
-                        <div style={{ "--i": btn['--i'] }}>
+                        <div
+                            style={{ "--i": btn['--i'] }}>
                             <Button
+                                handleClick={this.props.handleClick}
+                                btnKey={btn.key}
                                 style={btn.style}
                                 size={btn.size}
                                 shape={btn.shape}
