@@ -1,62 +1,94 @@
-const { Z, S, T, O, L, I, J, color } = require('./tetrominoes.js');
+const { color, PIECES, ROW, COL, SQ, VACANT, NEXTCOL, NEXTROW } = require('./tetrominoes.js');
 
-const ROW = 20;
-const COL = 10;
-const SQ = 20;
-const VACANT = "#87926e"; // color of an empty square
 let score = 0;
-let scoreElement = document.getElementById("score");
+let lines = 0;
+let board = [];
+let nextboard = [];
 
-function manipulate(ctx) {
-    // create the board
-    let board = [];
-    for (let r = 0; r < ROW; r++) {
-        board[r] = [];
-        for (let c = 0; c < COL; c++) {
-            board[r][c] = VACANT;
-        }
-    }
+function manipulate(ctx, nextElementCtx, scoreElement, linesElement, levelElement) {
 
-    // draw a square
-    function drawSquare(x, y, color) {
-        ctx.fillStyle = color;
-        ctx.fillRect(x * SQ, y * SQ, SQ, SQ);
-
-        ctx.strokeStyle = "BLACK";
-        ctx.strokeRect(x * SQ, y * SQ, SQ, SQ);
-    }
-
-    // draw the board
-    function drawBoard() {
-        for (let r = 0; r < ROW; r++) {
-            for (let c = 0; c < COL; c++) {
-                drawSquare(c, r, board[r][c]);
+    //create the board
+    function createBoard(currentRow, currentCol, currentBoard) {
+        for (let r = 0; r < currentRow; r++) {
+            currentBoard[r] = [];
+            for (let c = 0; c < currentCol; c++) {
+                currentBoard[r][c] = VACANT;
             }
         }
     }
 
-    drawBoard();
+    // draw a square
+    function drawSquare(currentCtx, x, y, color) {
+        currentCtx.fillStyle = color;
+        currentCtx.fillRect(x * SQ, y * SQ, SQ, SQ);
 
-    // the pieces and their colors
-    const PIECES = [
-        [Z, color],
-        [S, color],
-        [T, color],
-        [O, color],
-        [L, color],
-        [I, color],
-        [J, color]
-    ];
+        currentCtx.strokeStyle = "BLACK";
+        currentCtx.strokeRect(x * SQ, y * SQ, SQ, SQ);
+    }
 
+    // draw the board
+    function drawBoard(currentCtx, currentRow, currentCol, currentBoard) {
+        for (let r = 0; r < currentRow; r++) {
+            for (let c = 0; c < currentCol; c++) {
+                drawSquare(currentCtx, c, r, currentBoard[r][c]);
+            }
+        }
+    }
 
+    createBoard(ROW, COL, board);
+    createBoard(NEXTROW, NEXTCOL, nextboard);
+    drawBoard(ctx, ROW, COL, board);
+    drawBoard(nextElementCtx, NEXTROW, NEXTCOL, nextboard);
 
-    let p = randomPiece();
+    let r = Math.floor(Math.random() * PIECES.length) // 0 -> 6
+    let p = randomPiece(r);
+
+    let nextIndex = 0;
+    let next = generateNext();
+    nextPiecefill(color, next);
 
     // generate random pieces
-    function randomPiece() {
-        let r = Math.floor(Math.random() * PIECES.length) // 0 -> 6
+    function randomPiece(r) {
         return new Piece(PIECES[r][0], PIECES[r][1]);
     }
+
+    function generateNext() {
+        nextIndex = Math.floor(Math.random() * PIECES.length) // 0 -> 6
+        return new nextPiece(PIECES[nextIndex][0], PIECES[nextIndex][1]);
+    }
+
+    function nextPiece(tetromino, color) {
+        this.tetromino = tetromino;
+        this.color = color;
+        this.tetrominoN = 0;
+        this.activeTetromino = this.tetromino[this.tetrominoN];
+        this.x = 0;
+        this.y = 0;
+    }
+
+    //fill the next piece
+    function nextPiecefill(color, nextPiece) {
+        for (let r = 0; r < nextPiece.activeTetromino.length; r++) {
+            for (let c = 0; c < nextPiece.activeTetromino.length; c++) {
+                // we draw only occupied squares
+                if (nextPiece.activeTetromino[r][c]) {
+                    drawSquare(nextElementCtx, nextPiece.x + c, nextPiece.y + r, color);
+                }
+            }
+        }
+    }
+
+    // draw a nextPiece to the nextBoard
+    function nextPieceDraw(nextPiece) {
+        nextPiecefill(color, nextPiece);
+    }
+
+    // undraw a nextPiece
+    function nextPieceUnDraw(nextPiece) {
+        nextPiecefill(VACANT, nextPiece);
+    }
+
+
     // The Object Piece
     function Piece(tetromino, color) {
         this.tetromino = tetromino;
@@ -71,13 +103,12 @@ function manipulate(ctx) {
     }
 
     // fill function
-
     Piece.prototype.fill = function (color) {
         for (let r = 0; r < this.activeTetromino.length; r++) {
             for (let c = 0; c < this.activeTetromino.length; c++) {
                 // we draw only occupied squares
                 if (this.activeTetromino[r][c]) {
-                    drawSquare(this.x + c, this.y + r, color);
+                    drawSquare(ctx, this.x + c, this.y + r, color);
                 }
             }
         }
@@ -102,9 +133,13 @@ function manipulate(ctx) {
         } else {
             // we lock the piece and generate a new one
             this.lock();
-            p = randomPiece();
-        }
 
+            p = randomPiece(nextIndex);
+            nextPieceUnDraw(next);
+            next = generateNext();
+            nextPieceDraw(next);
+
+        }
     }
 
     // move Right the piece
@@ -169,6 +204,9 @@ function manipulate(ctx) {
             }
         }
 
+        score += 1;
+        scoreElement.innerHTML = `Score: ${score}`;
+
         // remove full rows
         for (let r = 0; r < ROW; r++) {
             let isRowFull = true;
@@ -187,15 +225,17 @@ function manipulate(ctx) {
                 for (let c = 0; c < COL; c++) {
                     board[0][c] = VACANT;
                 }
-                // increment the score
+                // increment the score, lines, level
                 score += 10;
-                console.log(score);
-                scoreElement.innerHTML = score;
+                lines += 1;
+                scoreElement.innerHTML = `Score: ${score}`;
+                linesElement.innerHTML = `Lines: ${lines}`;
+                levelElement.innerHTML = `Level: ${Math.ceil(lines / 10)}`;
             }
         }
 
         // update the board
-        drawBoard();
+        drawBoard(ctx, ROW, COL, board);
     }
 
     // collision fucntion
@@ -224,6 +264,7 @@ function manipulate(ctx) {
                 }
             }
         }
+
         return false;
     }
 
@@ -242,13 +283,15 @@ function manipulate(ctx) {
         }
     }
 
+
     // drop the piece every 1sec
     let dropStart = Date.now();
     let gameOver = false;
+
     function drop() {
         let now = Date.now();
         let delta = now - dropStart;
-        if (delta > 1000) {
+        if (delta > 1000 - lines * 10) {
             p.moveDown();
             dropStart = Date.now();
         }
@@ -261,5 +304,5 @@ function manipulate(ctx) {
 }
 
 module.exports = {
-    manipulate
+    manipulate,
 }

@@ -150,6 +150,23 @@ const Z = [
 ];
 
 const color = "black";
+const ROW = 20;
+const COL = 10;
+const SQ = 20;
+const VACANT = "#87926e"; // color of an empty square
+const NEXTCOL = 4;
+const NEXTROW = 4;
+
+// the pieces and their colors
+const PIECES = [
+	[Z, color],
+	[S, color],
+	[T, color],
+	[O, color],
+	[L, color],
+	[I, color],
+	[J, color]
+];
 
 module.exports = {
 	Z,
@@ -159,5 +176,12 @@ module.exports = {
 	O,
 	L,
 	J,
-	color
+	color,
+	ROW,
+	COL,
+	SQ,
+	VACANT,
+	NEXTCOL,
+	NEXTROW,
+	PIECES
 }

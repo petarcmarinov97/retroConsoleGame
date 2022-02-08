@@ -6,3 +6,8 @@ div.scoreboard {
     width: 152px;
     border: 1px solid black;
 }
+
+canvas#next{
+    max-width: 80px;
+    max-height: 80px;
+}
