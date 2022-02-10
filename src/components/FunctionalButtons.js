@@ -11,10 +11,11 @@ export default class FunctionalButtons extends Component {
           <div
             key={index}>
             <Button
+            class="tobeclicked"
               style={btn.style}
               size={btn.size}
               shape={btn.shape}
-              btnKey={btn.key}
+              btnkey={btn.btnkey}
               handleClick={this.props.handleClick}
             />
             <span>{btn.text}</span>

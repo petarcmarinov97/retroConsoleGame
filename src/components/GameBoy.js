@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Display from './Display';
 import { Typography } from 'antd';
 import Controller from './Controller';
-import Game from './Game';
 
 export default class GameBoy extends Component {
 

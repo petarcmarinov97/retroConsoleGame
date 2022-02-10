@@ -7,7 +7,18 @@ div.scoreboard {
     border: 1px solid black;
 }
 
-canvas#next{
+div.scoreboard div {
+    display: flex;
+    flex-direction: column;
+}
+
+div.scoreboard span {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+canvas#next {
     max-width: 80px;
     max-height: 80px;
 }

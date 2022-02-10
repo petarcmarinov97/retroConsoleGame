@@ -18,11 +18,11 @@ export default class Arrows extends Component {
                             style={{ "--i": btn['--i'] }}>
                             <Button
                                 handleClick={this.props.handleClick}
-                                btnKey={btn.key}
                                 style={btn.style}
                                 size={btn.size}
                                 shape={btn.shape}
                                 label={btn.label}
+                                btnkey={btn.btnkey}
                             />
                             {arrowSpan}
                         </div>

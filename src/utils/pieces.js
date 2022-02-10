@@ -1,11 +1,18 @@
 const { color, PIECES, ROW, COL, SQ, VACANT, NEXTCOL, NEXTROW } = require('./tetrominoes.js');
 
-let score = 0;
-let lines = 0;
+let points = 0;
+let cleans = 0;
 let board = [];
 let nextboard = [];
+let pieceIndex = 0;
+let piece = 0;
+let nextPieceIndex = 0;
+let nextPiece = 0;
 
-function manipulate(ctx, nextElementCtx, scoreElement, linesElement, levelElement) {
+function manipulate(cvs,ctx, nextElementCtx, pointsElement, cleansElement, levelElement) {
+
+    //Start a new game
+    newGame()
 
     //create the board
     function createBoard(currentRow, currentCol, currentBoard) {
@@ -35,29 +42,18 @@ function manipulate(ctx, nextElementCtx, scoreElement, linesElement, levelElemen
         }
     }
 
-    createBoard(ROW, COL, board);
-    createBoard(NEXTROW, NEXTCOL, nextboard);
-    drawBoard(ctx, ROW, COL, board);
-    drawBoard(nextElementCtx, NEXTROW, NEXTCOL, nextboard);
-
-    let r = Math.floor(Math.random() * PIECES.length) // 0 -> 6
-    let p = randomPiece(r);
-
-    let nextIndex = 0;
-    let next = generateNext();
-    nextPiecefill(color, next);
-
-    // generate random pieces
-    function randomPiece(r) {
+    // generate Piece
+    function generatePiece(r) {
         return new Piece(PIECES[r][0], PIECES[r][1]);
     }
 
-    function generateNext() {
-        nextIndex = Math.floor(Math.random() * PIECES.length) // 0 -> 6
-        return new nextPiece(PIECES[nextIndex][0], PIECES[nextIndex][1]);
+    //generate next Piece
+    function generateNextPiece() {
+        nextPieceIndex = Math.floor(Math.random() * PIECES.length) // 0 -> 6
+        return new getNextPiece(PIECES[nextPieceIndex][0], PIECES[nextPieceIndex][1]);
     }
 
-    function nextPiece(tetromino, color) {
+    function getNextPiece(tetromino, color) {
         this.tetromino = tetromino;
         this.color = color;
         this.tetrominoN = 0;
@@ -87,7 +83,6 @@ function manipulate(ctx, nextElementCtx, scoreElement, linesElement, levelElemen
     function nextPieceUnDraw(nextPiece) {
         nextPiecefill(VACANT, nextPiece);
     }
-
 
     // The Object Piece
     function Piece(tetromino, color) {
@@ -134,11 +129,11 @@ function manipulate(ctx, nextElementCtx, scoreElement, linesElement, levelElemen
             // we lock the piece and generate a new one
             this.lock();
 
-            p = randomPiece(nextIndex);
-            nextPieceUnDraw(next);
-            next = generateNext();
-            nextPieceDraw(next);
+            piece = generatePiece(nextPieceIndex);
 
+            nextPieceUnDraw(nextPiece);
+            nextPiece = generateNextPiece();
+            nextPieceDraw(nextPiece);
         }
     }
 
@@ -184,6 +179,7 @@ function manipulate(ctx, nextElementCtx, scoreElement, linesElement, levelElemen
         }
     }
 
+    //lock function
     Piece.prototype.lock = function () {
         for (let r = 0; r < this.activeTetromino.length; r++) {
             for (let c = 0; c < this.activeTetromino.length; c++) {
@@ -204,8 +200,8 @@ function manipulate(ctx, nextElementCtx, scoreElement, linesElement, levelElemen
             }
         }
 
-        score += 1;
-        scoreElement.innerHTML = `Score: ${score}`;
+        points += 1;
+        pointsElement.innerHTML = `${points}`;
 
         // remove full rows
         for (let r = 0; r < ROW; r++) {
@@ -226,11 +222,11 @@ function manipulate(ctx, nextElementCtx, scoreElement, linesElement, levelElemen
                     board[0][c] = VACANT;
                 }
                 // increment the score, lines, level
-                score += 10;
-                lines += 1;
-                scoreElement.innerHTML = `Score: ${score}`;
-                linesElement.innerHTML = `Lines: ${lines}`;
-                levelElement.innerHTML = `Level: ${Math.ceil(lines / 10)}`;
+                points += 10;
+                cleans += 1;
+                pointsElement.innerHTML = `${points}`;
+                cleansElement.innerHTML = `${cleans}`;
+                levelElement.innerHTML = `${Math.ceil(cleans / 10)}`;
             }
         }
 
@@ -268,39 +264,90 @@ function manipulate(ctx, nextElementCtx, scoreElement, linesElement, levelElemen
         return false;
     }
 
-    // CONTROL the piece
-    document.addEventListener("keydown", CONTROL);
+    // CONTROL the piece, click and keydown events
+    document.addEventListener("keydown", onKeyDown);
 
-    function CONTROL(event) {
-        if (event.keyCode === 37) {
-            p.moveLeft();
-        } else if (event.keyCode === 38) {
-            p.rotate();
-        } else if (event.keyCode === 39) {
-            p.moveRight();
-        } else if (event.keyCode === 40) {
-            p.moveDown();
-        }
+    document.addEventListener("click", onClick);
+
+    function onClick(event) {
+        controller(Number(event.target.id));
     }
 
+    function onKeyDown(event) {
+        controller(event.keyCode);
+    }
+
+    function controller(keyCode) {
+        if (keyCode === 37) {
+            piece.moveLeft();
+        }
+        else if (keyCode === 38) {
+            piece.rotate();
+        }
+        else if (keyCode === 39) {
+            piece.moveRight();
+        }
+        else if (keyCode === 32) {
+            console.log("Drop Down");
+        }
+        else if (keyCode === 40) {
+            piece.moveDown();
+        } else if (keyCode === 80) {
+            isPaused=true;
+            let pausedElement = document.getElementById("paused");
+            console.log(pausedElement);
+            pausedElement.style.display="block";
+        }
+        else if (keyCode === 82) {
+            console.log("Reset");
+            newGame();
+        }
+        else if (keyCode === 83) {
+            console.log("Sound");
+        }
+    }
 
     // drop the piece every 1sec
     let dropStart = Date.now();
     let gameOver = false;
+    let isPaused = false;
 
     function drop() {
         let now = Date.now();
         let delta = now - dropStart;
-        if (delta > 1000 - lines * 10) {
-            p.moveDown();
+        if (delta > 1000 - cleans * 10) {
+            piece.moveDown();
             dropStart = Date.now();
         }
-        if (!gameOver) {
+        if (!gameOver && !isPaused) {
             requestAnimationFrame(drop);
+        }else{
+            cancelAnimationFrame(drop)
         }
     }
 
     drop();
+
+    //Starting a game as we creating boards for current and next piece and drawing the boards
+    function newGame() {
+        createBoard(ROW, COL, board);
+        createBoard(NEXTROW, NEXTCOL, nextboard);
+        drawBoard(ctx, ROW, COL, board);
+        drawBoard(nextElementCtx, NEXTROW, NEXTCOL, nextboard);
+
+        pieceIndex = Math.floor(Math.random() * PIECES.length) // 0 -> 6
+        piece = generatePiece(pieceIndex);
+
+        nextPieceIndex = 0;
+        nextPiece = generateNextPiece();
+        nextPiecefill(color, nextPiece);
+
+        points = 0;
+        cleans = 0;
+        pointsElement.innerHTML = points;
+        cleansElement.innerHTML = cleans;
+        levelElement.innerHTML = 0;
+    }
 }
 
 module.exports = {

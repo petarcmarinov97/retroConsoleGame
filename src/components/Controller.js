@@ -12,15 +12,14 @@ export default class Controller extends Component {
     }
 
     handleClick = (e) => {
-        console.log(e);
         this.setState({ isClicked: true })
     }
 
     render() {
         return <div className="controller">
             <>
-                <FunctionalButtons handleClick={this.handleClick}/>
-                <ArrowButtons handleClick={this.handleClick}/>
+                <FunctionalButtons handleClick={this.handleClick} />
+                <ArrowButtons handleClick={this.handleClick} />
             </>
         </div>;
     }
