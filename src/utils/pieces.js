@@ -44,17 +44,17 @@ function buildTetris(cvs, ctx, nextElementCtx, pointsElement, cleansElement, lev
     }
 
     // generate Piece
-    function generatePiece(r) {
-        return new Piece(PIECES[r][0], PIECES[r][1]);
+    function createPiece(index) {
+        return new Piece(PIECES[index][0], PIECES[index][1]);
     }
 
     //generate next Piece
     function generateNextPiece() {
         nextPieceIndex = Math.floor(Math.random() * PIECES.length) // 0 -> 6
-        return new getNextPiece(PIECES[nextPieceIndex][0], PIECES[nextPieceIndex][1]);
+        return new nextPieceObject(PIECES[nextPieceIndex][0], PIECES[nextPieceIndex][1]);
     }
 
-    function getNextPiece(tetromino, color) {
+    function nextPieceObject(tetromino, color) {
         this.tetromino = tetromino;
         this.color = color;
         this.tetrominoN = 0;
@@ -130,18 +130,11 @@ function buildTetris(cvs, ctx, nextElementCtx, pointsElement, cleansElement, lev
             // we lock the piece and generate a new one
             this.lock();
 
-            piece = generatePiece(nextPieceIndex);
+            piece = createPiece(nextPieceIndex);
 
             nextPieceUnDraw(nextPiece);
             nextPiece = generateNextPiece();
             nextPieceDraw(nextPiece);
-        }
-    }
-
-    // Drop the piece to the down side of the board
-    Piece.prototype.drop = function () {
-        while (!this.collision(0, 1, this.activeTetromino)) {
-            this.moveDown();
         }
     }
 
@@ -184,6 +177,13 @@ function buildTetris(cvs, ctx, nextElementCtx, pointsElement, cleansElement, lev
             this.tetrominoN = (this.tetrominoN + 1) % this.tetromino.length; // (0+1)%4 => 1
             this.activeTetromino = this.tetromino[this.tetrominoN];
             this.draw();
+        }
+    }
+
+    // Drop the piece to the down side of the board
+    Piece.prototype.drop = function () {
+        while (!this.collision(0, 1, this.activeTetromino)) {
+            this.moveDown();
         }
     }
 
@@ -311,16 +311,16 @@ function buildTetris(cvs, ctx, nextElementCtx, pointsElement, cleansElement, lev
 
     //onClick handler after clicking on the buttons
     function onClickHandler(event) {
-        controller(Number(event.target.id));
+        actionsController(Number(event.target.id));
     }
 
     //onClick handler after pressing a button from the keyboard
     function onKeyDownHandler(event) {
-        controller(event.keyCode);
+        actionsController(event.keyCode);
     }
 
     //A controller for all the functionality of the game
-    function controller(keyCode) {
+    function actionsController(keyCode) {
 
         if (!isPaused && !gameOver) {
             switch (keyCode) {
@@ -422,7 +422,7 @@ function buildTetris(cvs, ctx, nextElementCtx, pointsElement, cleansElement, lev
         drawBoard(nextElementCtx, NEXTROW, NEXTCOL, nextboard);
 
         pieceIndex = Math.floor(Math.random() * PIECES.length) // 0 -> 6
-        piece = generatePiece(pieceIndex);
+        piece = createPiece(pieceIndex);
 
         nextPieceIndex = 0;
         nextPiece = generateNextPiece();
@@ -462,19 +462,17 @@ function buildTetris(cvs, ctx, nextElementCtx, pointsElement, cleansElement, lev
         }
     }
 
-    // CONTROL the piece, click and keydown events
+    //CONTROL the piece, click and keydown events
     document.addEventListener("keydown", onKeyDownHandler);
     document.addEventListener("click", onClickHandler);
     let gameOverElement = document.getElementById("gameOver");
     let pausedElement = document.getElementById("paused");
     let lastGameStatsElement = document.getElementById("lastGameStats");
     pausedElement.addEventListener("click", pausedGameHandler);
-    gameOverElement.addEventListener("click", gameOverHandler)
+    gameOverElement.addEventListener("click", gameOverHandler);
 
     //Start a new game
     newGame()
-
-    drop();
 }
 
 module.exports = {
