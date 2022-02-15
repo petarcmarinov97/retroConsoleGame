@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
-import { manipulate } from '../utils/pieces.js';
+import { buildTetris } from '../utils/pieces.js';
+import GameOver from './GameOver.js';
+import LastGameStats from './LastGameStats.js';
+import PausedGame from './PausedGame.js';
 import TetrisScoreBoard from './TetrisScoreBoard.js'
 
 export default class Tetris extends Component {
-
-    constructor() {
-        super();
-        this.state = {
-            isPaused: false
-        }
-        this.onClick = this.onClick.bind(this);
-        this.onKeyDown = this.onKeyDown.bind(this);
-        this.controller = this.controller.bind(this);
-    }
 
     componentDidMount() {
         const cvs = document.getElementById("tetris");
@@ -23,36 +16,20 @@ export default class Tetris extends Component {
         const cleansElement = document.getElementById("cleans");
         const levelElement = document.getElementById("level");
 
-        manipulate(cvs,ctx, nextElementCtx, pointsElement, cleansElement, levelElement);
-
-        document.addEventListener("click", this.onClick);
-        document.addEventListener("keydown", this.onKeyDown);
-    }
-
-    onClick = (e) => {
-        this.controller(Number(e.target.id));
-    }
-
-    onKeyDown = (e) => {
-        this.controller(e.keyCode);
-    }
-
-    controller = (keyCode) => {
-        if (keyCode === 80) {
-            if (!this.state.isPaused) {
-                this.setState({ isPaused: true });
-            } else {
-                this.setState({ isPaused: false });
-            }
-        }
+        buildTetris(cvs, ctx, nextElementCtx, pointsElement, cleansElement, levelElement);
     }
 
     render() {
         const canvasHeight = "400px";
         const canvasWidth = "200px";
+        const defaultStyle = {
+            display: "none"
+        }
 
         return <>
-            <div id="paused" style={{display:'none'}}>The Game is Paused!</div>
+            <PausedGame defaultStyle={defaultStyle} />
+            <GameOver defaultStyle={defaultStyle} />
+            <LastGameStats defaultStyle={defaultStyle} />
             <canvas id="tetris" height={canvasHeight} width={canvasWidth} />
             <TetrisScoreBoard />
         </>

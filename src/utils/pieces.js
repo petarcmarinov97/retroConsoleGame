@@ -8,11 +8,12 @@ let pieceIndex = 0;
 let piece = 0;
 let nextPieceIndex = 0;
 let nextPiece = 0;
+let dropStart = Date.now();
+let gameOver = false;
+let isPaused = false;
+let isFinished = false;
 
-function manipulate(cvs,ctx, nextElementCtx, pointsElement, cleansElement, levelElement) {
-
-    //Start a new game
-    newGame()
+function buildTetris(cvs, ctx, nextElementCtx, pointsElement, cleansElement, levelElement) {
 
     //create the board
     function createBoard(currentRow, currentCol, currentBoard) {
@@ -137,6 +138,13 @@ function manipulate(cvs,ctx, nextElementCtx, pointsElement, cleansElement, level
         }
     }
 
+    // Drop the piece to the down side of the board
+    Piece.prototype.drop = function () {
+        while (!this.collision(0, 1, this.activeTetromino)) {
+            this.moveDown();
+        }
+    }
+
     // move Right the piece
     Piece.prototype.moveRight = function () {
         if (!this.collision(1, 0, this.activeTetromino)) {
@@ -190,9 +198,10 @@ function manipulate(cvs,ctx, nextElementCtx, pointsElement, cleansElement, level
                 }
                 // pieces to lock on top = game over
                 if (this.y + r < 0) {
-                    alert("Game Over");
                     // stop request animation frame
                     gameOver = true;
+                    gameOverElement.style.display = "block";
+                    cvs.style.display = "none";
                     break;
                 }
                 // we lock the piece
@@ -234,7 +243,7 @@ function manipulate(cvs,ctx, nextElementCtx, pointsElement, cleansElement, level
         drawBoard(ctx, ROW, COL, board);
     }
 
-    // collision fucntion
+    // collision function
     Piece.prototype.collision = function (x, y, piece) {
         for (let r = 0; r < piece.length; r++) {
             for (let c = 0; c < piece.length; c++) {
@@ -264,54 +273,134 @@ function manipulate(cvs,ctx, nextElementCtx, pointsElement, cleansElement, level
         return false;
     }
 
-    // CONTROL the piece, click and keydown events
-    document.addEventListener("keydown", onKeyDown);
+    //Handler for Yes or No pressing for reset, after the Game is Over
+    function gameOverHandler(event) {
+        let buttonId = event.target.id;
 
-    document.addEventListener("click", onClick);
+        if (buttonId === "Yes") {
+            gameOver = false;
+            requestAnimationFrame(drop);
+            gameOverElement.style.display = "none";
+            cvs.style.display = "block";
+            newGame();
+        }
+        else if (buttonId === "No") {
+            gameOverElement.style.display = "none";
+            lastGameStatsElement.style.display = "block";
+            lastGameStatsElement.innerHTML = `In your last game you got:\nPoints:${points}\nCleans:${cleans}\nLevel:${Math.ceil(cleans / 10)}`;
+        }
+    }
 
-    function onClick(event) {
+    //Handler for Yes or No pressing for continue, afther the Game is Paused
+    function pausedGameHandler(event) {
+        let buttonId = event.target.id;
+
+        if (buttonId === "Yes") {
+            isPaused = false;
+            pausedElement.style.display = "none";
+            cvs.style.display = "block";
+            requestAnimationFrame(drop);
+        }
+        else if (buttonId === "No") {
+            isFinished = true;
+            pausedElement.style.display = "none";
+            lastGameStatsElement.style.display = "block";
+            lastGameStatsElement.innerHTML = `You finished the game with:\nPoints:${points}\nCleans:${cleans}\nLevel:${Math.ceil(cleans / 10)}`;
+        }
+    }
+
+    //onClick handler after clicking on the buttons
+    function onClickHandler(event) {
         controller(Number(event.target.id));
     }
 
-    function onKeyDown(event) {
+    //onClick handler after pressing a button from the keyboard
+    function onKeyDownHandler(event) {
         controller(event.keyCode);
     }
 
+    //A controller for all the functionality of the game
     function controller(keyCode) {
-        if (keyCode === 37) {
-            piece.moveLeft();
+
+        if (!isPaused && !gameOver) {
+            switch (keyCode) {
+                case 37:
+                    piece.moveLeft();
+                    break;
+
+                case 38:
+                    piece.rotate();
+                    break;
+
+                case 39:
+                    piece.moveRight();
+                    break;
+
+                case 40:
+                    piece.moveDown();
+                    break;
+
+                case 32:
+                    piece.drop();
+                    break;
+
+                case 80:
+                    changePauseElement();
+                    break;
+
+                case 82:
+                    resetElements();
+                    newGame();
+                    break;
+
+                case 83:
+                    console.log("Sound");
+                    break;
+
+                default:
+                    break;
+            }
         }
-        else if (keyCode === 38) {
-            piece.rotate();
+        else if (isPaused && !isFinished) {
+            switch (keyCode) {
+                case 80:
+                    changePauseElement();
+                    break;
+
+                case 82:
+                    resetElements();
+                    newGame();
+                    break;
+
+                default:
+                    break;
+            }
         }
-        else if (keyCode === 39) {
-            piece.moveRight();
+        else if (isFinished) {
+            switch (keyCode) {
+                case 82:
+                    resetElements();
+                    newGame();
+                    break;
+
+                default:
+                    break;
+            }
         }
-        else if (keyCode === 32) {
-            console.log("Drop Down");
-        }
-        else if (keyCode === 40) {
-            piece.moveDown();
-        } else if (keyCode === 80) {
-            isPaused=true;
-            let pausedElement = document.getElementById("paused");
-            console.log(pausedElement);
-            pausedElement.style.display="block";
-        }
-        else if (keyCode === 82) {
-            console.log("Reset");
-            newGame();
-        }
-        else if (keyCode === 83) {
-            console.log("Sound");
+        else if (gameOver && !isPaused) {
+            switch (keyCode) {
+                case 82:
+                    resetElements();
+                    newGame();
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 
     // drop the piece every 1sec
-    let dropStart = Date.now();
-    let gameOver = false;
-    let isPaused = false;
-
     function drop() {
         let now = Date.now();
         let delta = now - dropStart;
@@ -319,14 +408,11 @@ function manipulate(cvs,ctx, nextElementCtx, pointsElement, cleansElement, level
             piece.moveDown();
             dropStart = Date.now();
         }
+
         if (!gameOver && !isPaused) {
             requestAnimationFrame(drop);
-        }else{
-            cancelAnimationFrame(drop)
         }
     }
-
-    drop();
 
     //Starting a game as we creating boards for current and next piece and drawing the boards
     function newGame() {
@@ -347,9 +433,50 @@ function manipulate(cvs,ctx, nextElementCtx, pointsElement, cleansElement, level
         pointsElement.innerHTML = points;
         cleansElement.innerHTML = cleans;
         levelElement.innerHTML = 0;
+        requestAnimationFrame(drop);
     }
+
+    //Reset the elements from DOM and the flags
+    function resetElements() {
+        isPaused = false;
+        gameOver = false;
+        isFinished = false;
+        pausedElement.style.display = "none";
+        cvs.style.display = "block";
+        gameOverElement.style.display = "none";
+        lastGameStatsElement.style.display = "none";
+    }
+
+    //Change isPaused flag and the pausedElement
+    function changePauseElement() {
+        if (!isPaused) {
+            isPaused = true;
+            pausedElement.style.display = "block";
+            cvs.style.display = "none";
+        }
+        else if (isPaused) {
+            isPaused = false;
+            pausedElement.style.display = "none";
+            cvs.style.display = "block";
+            requestAnimationFrame(drop);
+        }
+    }
+
+    // CONTROL the piece, click and keydown events
+    document.addEventListener("keydown", onKeyDownHandler);
+    document.addEventListener("click", onClickHandler);
+    let gameOverElement = document.getElementById("gameOver");
+    let pausedElement = document.getElementById("paused");
+    let lastGameStatsElement = document.getElementById("lastGameStats");
+    pausedElement.addEventListener("click", pausedGameHandler);
+    gameOverElement.addEventListener("click", gameOverHandler)
+
+    //Start a new game
+    newGame()
+
+    drop();
 }
 
 module.exports = {
-    manipulate,
+    buildTetris,
 }

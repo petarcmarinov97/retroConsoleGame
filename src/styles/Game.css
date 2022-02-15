@@ -6,3 +6,18 @@ canvas {
     width: 200px;
     border: 1px solid black;
 }
+
+div#paused {
+    margin: 4px 1px 0px 4px;
+    height: 400px;
+    width: 200px;
+    border: 1px solid black;
+}
+
+div#gameOver {
+    text-align: center;
+    margin: 4px 1px 0px 4px;
+    height: 400px;
+    width: 200px;
+    border: 1px solid black;
+}

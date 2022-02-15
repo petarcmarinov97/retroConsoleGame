@@ -1,9 +1,9 @@
 div.scoreboard {
     margin: 4px 4px 0px 0px;
     max-height: 400px;
-    max-width: 152px;
+    max-width: 95px;
     height: 400px;
-    width: 152px;
+    width: 95px;
     border: 1px solid black;
 }
 

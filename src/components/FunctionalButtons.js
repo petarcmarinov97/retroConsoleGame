@@ -4,6 +4,7 @@ import "../styles/OptionalButtons.css";
 import { functionalButtonCfg } from '../configs/buttonsCfg';
 
 export default class FunctionalButtons extends Component {
+
   render() {
     return <div className="optional">
       <>
@@ -11,7 +12,7 @@ export default class FunctionalButtons extends Component {
           <div
             key={index}>
             <Button
-            class="tobeclicked"
+              class="tobeclicked"
               style={btn.style}
               size={btn.size}
               shape={btn.shape}
