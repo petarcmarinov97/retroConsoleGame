@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { arrowButtonCfg } from '../configs/buttonsCfg';
-import "../styles/Arrows.css";
 import Button from './Button';
+import "../styles/ArrowButtons.css";
 
-export default class Arrows extends Component {
+export default class ArrowButtons extends Component {
 
     render() {
         const arrowSpan = <span>&#11164;</span>
@@ -17,7 +17,6 @@ export default class Arrows extends Component {
                         <div
                             style={{ "--i": btn['--i'] }}>
                             <Button
-                                handleClick={this.props.handleClick}
                                 style={btn.style}
                                 size={btn.size}
                                 shape={btn.shape}

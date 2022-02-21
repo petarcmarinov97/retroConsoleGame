@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button tests Snapshots should render correctly 1`] = `
+<Fragment>
+  <Button
+    btnkey={37}
+    id={37}
+    shape="circle"
+    size="large"
+    style={
+      Object {
+        "border": "1px solid #000",
+        "borderColor": "transparent",
+        "boxShadow": "0px 0px 2px 1px rgb(255 255 255 / 60%) inset",
+        "visibility": "unset",
+      }
+    }
+    type="primary"
+  />
+</Fragment>
+`;

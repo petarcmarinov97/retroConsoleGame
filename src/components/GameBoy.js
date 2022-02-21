@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
 import Display from './Display';
-import { Typography } from 'antd';
 import Controller from './Controller';
+import Title from './Title';
 
 export default class GameBoy extends Component {
-
     render() {
-        const { Title } = Typography;
         const { gameTitle } = this.props;
 
         return <div className="game_boy">
             <>
-                <Title level={4}>{gameTitle}</Title>
+                <Title gameTitle={gameTitle} />
                 <Display />
                 <Controller />
             </>

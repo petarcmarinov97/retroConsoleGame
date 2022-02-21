@@ -1,0 +1,125 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArrowButtons tests Snapshots should render correctly 1`] = `
+<div
+  className="arrows"
+>
+  <div
+    className="button_wrapper"
+    key="0"
+  >
+    <div
+      style={
+        Object {
+          "--i": 0,
+        }
+      }
+    >
+      <Button
+        btnkey={37}
+        shape="circle"
+        size="large"
+        style={
+          Object {
+            "border": "1px solid #000",
+            "borderColor": "transparent",
+            "boxShadow": "0px 0px 2px 1px rgb(255 255 255 / 60%) inset",
+            "visibility": "unset",
+          }
+        }
+      />
+      <span>
+        ⮜
+      </span>
+    </div>
+  </div>
+  <div
+    className="button_wrapper"
+    key="1"
+  >
+    <div
+      style={
+        Object {
+          "--i": 1,
+        }
+      }
+    >
+      <Button
+        btnkey={38}
+        label={true}
+        shape="circle"
+        size="large"
+        style={
+          Object {
+            "border": "1px solid #000",
+            "borderColor": "transparent",
+            "boxShadow": "0px 0px 2px 1px rgb(255 255 255 / 60%) inset",
+            "visibility": "unset",
+          }
+        }
+      />
+      <span>
+        ⮜
+      </span>
+    </div>
+  </div>
+  <div
+    className="button_wrapper"
+    key="2"
+  >
+    <div
+      style={
+        Object {
+          "--i": 2,
+        }
+      }
+    >
+      <Button
+        btnkey={39}
+        shape="circle"
+        size="large"
+        style={
+          Object {
+            "border": "1px solid #000",
+            "borderColor": "transparent",
+            "boxShadow": "0px 0px 2px 1px rgb(255 255 255 / 60%) inset",
+            "visibility": "unset",
+          }
+        }
+      />
+      <span>
+        ⮜
+      </span>
+    </div>
+  </div>
+  <div
+    className="button_wrapper"
+    key="3"
+  >
+    <div
+      style={
+        Object {
+          "--i": 3,
+        }
+      }
+    >
+      <Button
+        btnkey={40}
+        shape="circle"
+        size="large"
+        style={
+          Object {
+            "border": "1px solid #000",
+            "borderColor": "transparent",
+            "boxShadow": "0px 0px 2px 1px rgb(255 255 255 / 60%) inset",
+            "visibility": "unset",
+          }
+        }
+      />
+      <span>
+        ⮜
+      </span>
+    </div>
+  </div>
+</div>
+`;

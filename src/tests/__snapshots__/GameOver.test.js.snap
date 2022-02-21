@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GameOver tests Snapshots should render correctly 1`] = `
+<div
+  id="gameOver"
+  style={
+    Object {
+      "display": "none",
+    }
+  }
+>
+  <span>
+    The Game is Over!
+ Do you want to start a new game ?
+  </span>
+  <div>
+    <button
+      id="Yes"
+    >
+      Yes
+    </button>
+    <button
+      id="No"
+    >
+      No
+    </button>
+  </div>
+</div>
+`;

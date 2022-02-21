@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PausedGame tests Snapshots should render correctly 1`] = `
+<div
+  id="paused"
+  style={
+    Object {
+      "display": "none",
+    }
+  }
+>
+  <span>
+    The game is Paused.
+ Do you want to continue ?
+  </span>
+  <div>
+    <button
+      id="Yes"
+    >
+      Yes
+    </button>
+    <button
+      id="No"
+    >
+      No
+    </button>
+  </div>
+</div>
+`;

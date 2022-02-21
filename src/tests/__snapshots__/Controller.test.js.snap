@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Controller tests Snapshots should render correctly 1`] = `
+<div
+  className="controller"
+>
+  <FunctionalButtons />
+  <ArrowButtons />
+</div>
+`;

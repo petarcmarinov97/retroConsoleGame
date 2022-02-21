@@ -5,21 +5,11 @@ import FunctionalButtons from './FunctionalButtons';
 
 export default class Controller extends Component {
 
-    constructor() {
-        super();
-
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    handleClick = (e) => {
-        this.setState({ isClicked: true })
-    }
-
     render() {
         return <div className="controller">
             <>
-                <FunctionalButtons handleClick={this.handleClick} />
-                <ArrowButtons handleClick={this.handleClick} />
+                <FunctionalButtons />
+                <ArrowButtons />
             </>
         </div>;
     }

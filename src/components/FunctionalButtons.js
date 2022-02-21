@@ -17,7 +17,6 @@ export default class FunctionalButtons extends Component {
               size={btn.size}
               shape={btn.shape}
               btnkey={btn.btnkey}
-              handleClick={this.props.handleClick}
             />
             <span>{btn.text}</span>
           </div>
