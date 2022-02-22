@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GameBoy tests Snapshots should render correctly 1`] = `
+<div
+  className="game_boy"
+>
+  <Title
+    gameTitle="Tetris"
+  />
+  <Display />
+  <Controller />
+</div>
+`;

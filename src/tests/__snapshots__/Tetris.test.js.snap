@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tetris tests Snapshots should render correctly 1`] = `
+<Fragment>
+  <PausedGame
+    defaultStyle={
+      Object {
+        "display": "none",
+      }
+    }
+  />
+  <GameOver
+    defaultStyle={
+      Object {
+        "display": "none",
+      }
+    }
+  />
+  <LastGameStats
+    defaultStyle={
+      Object {
+        "display": "none",
+      }
+    }
+  />
+  <canvas
+    height="400px"
+    id="tetris"
+    width="200px"
+  />
+  <TetrisScoreBoard />
+</Fragment>
+`;

@@ -10,13 +10,17 @@ export default class Tetris extends Component {
     componentDidMount() {
         const cvs = document.getElementById("tetris");
         const nextElement = document.getElementById("next");
-        const ctx = cvs.getContext('2d');
-        const nextElementCtx = nextElement.getContext('2d');
+        const ctx = cvs && cvs.getContext('2d');
+        const nextElementCtx = nextElement && nextElement.getContext('2d');
         const pointsElement = document.getElementById("points");
         const cleansElement = document.getElementById("cleans");
         const levelElement = document.getElementById("level");
 
-        buildTetris(cvs, ctx, nextElementCtx, pointsElement, cleansElement, levelElement);
+        let inputObject = {
+            cvs, ctx, nextElementCtx, pointsElement, cleansElement, levelElement
+        }
+        
+        buildTetris(inputObject);
     }
 
     render() {

@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Display tests Snapshots should render correctly 1`] = `
+<div
+  className="display"
+>
+  <Game />
+</div>
+`;

@@ -7,6 +7,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
     "jest": "^27.5.1",
+    "jest-canvas-mock": "^2.3.1",
     "react": "^16.8.0",
     "react-canvas-draw": "^1.2.1",
     "react-canvas-paint": "^1.0.1",
@@ -44,12 +45,16 @@
     "enzyme-to-json": "^3.6.2"
   },
   "jest": {
+    "setupFiles": [
+      "jest-canvas-mock"
+    ],
     "setupFilesAfterEnv": [
       "./setupTests.js"
     ],
-      "moduleNameMapper": {
-        "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
-        "\\.(css|less)$": "identity-obj-proxy"
-      }
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "identity-obj-proxy"
+    },
+    "testEnvironment": "jsdom"
   }
 }

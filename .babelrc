@@ -1,4 +1,4 @@
 {
   "presets": ["@babel/env", "@babel/react"],
-    "plugins": [["import",{"libraryName":"antd"}]]
+    "plugins": [["import",{"libraryName":"antd"},"@babel/plugin-transform-modules-commonjs"]]
   }
