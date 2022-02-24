@@ -16,7 +16,7 @@ let cvs, ctx, nextElementCtx, pointsElement, cleansElement, levelElement;
 let gameOverElement, pausedElement, lastGameStatsElement;
 
 //create the board
-function createBoard(currentRow, currentCol, currentBoard) {
+export function createBoard(currentRow, currentCol, currentBoard) {
     for (let r = 0; r < currentRow; r++) {
         currentBoard[r] = [];
         for (let c = 0; c < currentCol; c++) {
@@ -26,7 +26,7 @@ function createBoard(currentRow, currentCol, currentBoard) {
 }
 
 // draw a square
-function drawSquare(currentCtx, x, y, color) {
+export function drawSquare(currentCtx, x, y, color) {
     if (currentCtx) {
         currentCtx.fillStyle = color;
         currentCtx.fillRect(x * SQ, y * SQ, SQ, SQ);
@@ -37,7 +37,7 @@ function drawSquare(currentCtx, x, y, color) {
 }
 
 // draw the board
-function drawBoard(currentCtx, currentRow, currentCol, currentBoard) {
+export function drawBoard(currentCtx, currentRow, currentCol, currentBoard) {
     for (let r = 0; r < currentRow; r++) {
         for (let c = 0; c < currentCol; c++) {
             drawSquare(currentCtx, c, r, currentBoard[r][c]);
@@ -46,12 +46,12 @@ function drawBoard(currentCtx, currentRow, currentCol, currentBoard) {
 }
 
 // generate Piece
-function createPiece(index, x = 0, y = 0) {
+export function createPiece(index, x = 0, y = 0) {
     return new Piece(PIECES[index][0], PIECES[index][1], x, y);
 }
 
 // The Object Piece
-function Piece(tetromino, color, x = 0, y = 0) {
+export function Piece(tetromino, color, x = 0, y = 0) {
     this.tetromino = tetromino;
     this.color = color;
     this.tetrominoN = 0;
@@ -59,14 +59,11 @@ function Piece(tetromino, color, x = 0, y = 0) {
     this.x = x;
     this.y = y;
 
-    if (this.x === 0 && this.y === 0) {
-        this.fill = fill;
-        this.draw = draw;
-        this.unDraw = unDraw;
-    } else {
-        this.fill = fill;
-        this.draw = draw;
-        this.unDraw = unDraw;
+    this.fill = fill;
+    this.draw = draw;
+    this.unDraw = unDraw;
+
+    if (this.x !== 0 && this.y !== 0) {
         this.moveDown = moveDown;
         this.moveLeft = moveLeft;
         this.moveRight = moveRight;
@@ -78,7 +75,7 @@ function Piece(tetromino, color, x = 0, y = 0) {
 }
 
 // fill function
-function fill(color, piece, ctx) {
+export function fill(color, piece, ctx) {
     for (let r = 0; r < piece.activeTetromino.length; r++) {
         for (let c = 0; c < piece.activeTetromino.length; c++) {
             // we draw only occupied squares
@@ -90,17 +87,17 @@ function fill(color, piece, ctx) {
 }
 
 // draw a piece to the board
-function draw(piece, ctx) {
-    this.fill(this.color, piece, ctx);
+export function draw(piece, ctx) {
+    piece.fill(piece.color, piece, ctx);
 }
 
 // undraw a piece
-function unDraw(piece, ctx) {
-    this.fill(VACANT, piece, ctx);
+export function unDraw(piece, ctx) {
+    piece.fill(VACANT, piece, ctx);
 }
 
 // move Down the piece
-function moveDown() {
+export function moveDown() {
     if (!this.collision(0, 1, this.activeTetromino)) {
         this.unDraw(piece, ctx);
         this.y++;
@@ -119,7 +116,7 @@ function moveDown() {
 }
 
 // move Right the piece
-function moveRight() {
+export function moveRight() {
     if (!this.collision(1, 0, this.activeTetromino)) {
         this.unDraw(piece, ctx);
         this.x++;
@@ -128,7 +125,7 @@ function moveRight() {
 }
 
 // move Left the piece
-function moveLeft() {
+export function moveLeft() {
     if (!this.collision(-1, 0, this.activeTetromino)) {
         this.unDraw(piece, ctx);
         this.x--;
@@ -137,7 +134,7 @@ function moveLeft() {
 }
 
 // rotate the piece
-function rotate() {
+export function rotate() {
     let nextPattern = this.tetromino[(this.tetrominoN + 1) % this.tetromino.length];
     let kick = 0;
 
@@ -161,14 +158,14 @@ function rotate() {
 }
 
 // Drop the piece to the down side of the board
-function dropElement() {
+export function dropElement() {
     while (!this.collision(0, 1, this.activeTetromino)) {
         this.moveDown();
     }
 }
 
 //lock function
-function lock() {
+export function lock() {
     for (let r = 0; r < this.activeTetromino.length; r++) {
         for (let c = 0; c < this.activeTetromino.length; c++) {
 
@@ -224,7 +221,7 @@ function lock() {
 }
 
 // collision function
-function collision(x, y, piece) {
+export function collision(x, y, piece) {
     for (let r = 0; r < piece.length; r++) {
         for (let c = 0; c < piece.length; c++) {
             // if the square is empty, we skip it
@@ -254,7 +251,7 @@ function collision(x, y, piece) {
 }
 
 // drop the piece every 1sec
-function drop() {
+export function drop() {
     let now = Date.now();
     let delta = now - dropStart;
     if (delta > 1000 - cleans * 10) {
@@ -268,7 +265,7 @@ function drop() {
 }
 
 //Starting a game as we creating boards for current and next piece and drawing the boards
-function newGame() {
+export function newGame() {
     createBoard(ROW, COL, board);
     createBoard(NEXTROW, NEXTCOL, nextboard);
     drawBoard(ctx, ROW, COL, board);
@@ -290,7 +287,7 @@ function newGame() {
 }
 
 //Reset the elements from DOM and the flags
-function resetElements() {
+export function resetElements() {
     isPaused = false;
     gameOver = false;
     isFinished = false;
@@ -301,7 +298,7 @@ function resetElements() {
 }
 
 //Change isPaused flag and the pausedElement
-function changePauseElement() {
+export function changePauseElement() {
     if (!isPaused) {
         isPaused = true;
         pausedElement.style.display = "block";
@@ -316,7 +313,7 @@ function changePauseElement() {
 }
 
 //Handler for Yes or No pressing for reset, after the Game is Over
-function gameOverHandler(event) {
+export function gameOverHandler(event) {
     let buttonId = event.target.id;
 
     if (buttonId === "Yes") {
@@ -334,7 +331,7 @@ function gameOverHandler(event) {
 }
 
 //Handler for Yes or No pressing for continue, afther the Game is Paused
-function pausedGameHandler(event) {
+export function pausedGameHandler(event) {
     let buttonId = event.target.id;
 
     if (buttonId === "Yes") {
@@ -352,17 +349,17 @@ function pausedGameHandler(event) {
 }
 
 //onClick handler after clicking on the buttons
-function onClickHandler(event) {
+export function onClickHandler(event) {
     actionsController(Number(event.target.id));
 }
 
 //onClick handler after pressing a button from the keyboard
-function onKeyDownHandler(event) {
+export function onKeyDownHandler(event) {
     actionsController(event.keyCode);
 }
 
 //A controller for all the functionality of the game
-function actionsController(keyCode) {
+export function actionsController(keyCode) {
 
     if (!isPaused && !gameOver) {
         switch (keyCode) {
@@ -442,7 +439,7 @@ function actionsController(keyCode) {
     }
 }
 
-function buildTetris(inputObject) {
+export function buildTetris(inputObject) {
     cvs = inputObject.cvs;
     ctx = inputObject.ctx;
     nextElementCtx = inputObject.nextElementCtx;
@@ -469,8 +466,4 @@ function buildTetris(inputObject) {
     //Start a new game
     newGame();
     drop();
-}
-
-module.exports = {
-    buildTetris,
 }
